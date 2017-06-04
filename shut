@@ -9,7 +9,7 @@ eval set -- "$OPTIONS"
 while true; do
 	case "$1" in
 	-f)
-		file="$2"
+		SHUT_SUITE="$2"
 		shift 2
 		;;
 	--)
@@ -71,16 +71,23 @@ is_path() {
 	fi
 }
 
-if [ -r $file ]; then
-	if ! is_path "$file"; then
-		file="./$file"
+shut_target() {
+	local src_file="$1" && shift
+	local src_path="$(dirname $SHUT_SUITE)/$src_file"
+	echo "testing implementation in '$src_path'"
+	. $src_path
+}
+
+if [ -r $SHUT_SUITE ]; then
+	if ! is_path "$SHUT_SUITE"; then
+		SHUT_SUITE="./$SHUT_SUITE"
 	fi
-	. $file
+	. $SHUT_SUITE
 	ntests=$(echo "$SHUT_TESTS" | wc -w)
-	echo "--- running "$ntests" tests from '$file'"
+	echo "running "$ntests" test cases from '$SHUT_SUITE'"
 	echo
 else
-	echo "*** could not read '$file'"
+	echo "*** could not read '$SHUT_SUITE'"
 	exit 1
 fi
 

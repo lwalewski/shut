@@ -1,4 +1,6 @@
 #!/bin/sh
+#
+# implementation to be tested
 
 email_bre='^[A-Za-z]\{1,\}[A-Za-z0-9.]\{1,\}@[A-Za-z0-9]\{1,\}\(\.[A-Za-z0-9]\{1,\}\)\{1,\}$'
 

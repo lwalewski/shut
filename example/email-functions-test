@@ -1,6 +1,8 @@
 #!/bin/sh
+#
+# define test cases
 
-. ./email-functions
+shut_target "email-functions"
 
 SHUT_TESTS="\
 	email_bre_test1 \
