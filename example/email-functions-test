@@ -1,0 +1,78 @@
+#!/bin/sh
+
+. ./email-functions
+
+SHUT_TESTS="\
+	email_bre_test1 \
+	email_bre_test2 \
+	is_valid_email_test1 \
+	is_valid_email_test2 \
+	get_user_name_test1 \
+	get_user_name_test2 \
+	get_domain_name_test1 \
+	get_domain_name_test2 \
+	"
+
+email_bre_test1() {
+	msg="regexp matches valid e-mail string"
+	inp="joe.smith@example.company.com"
+	out=$(expr "$inp" : "\($email_bre\)")
+	assert_equal "$inp" "$out" "$msg"
+}
+
+email_bre_test2() {
+	msg="regexp does not match invalid e-mail string"
+	inp="joe^smith_example!company.com"
+	out=$(expr "$inp" : "\($email_bre\)")
+	assert_not_equal "$inp" "$out" "$msg"
+}
+
+is_valid_email_test1() {
+	msg="valid e-mail string validates"
+	inp="joe@example.com"
+	exp=0
+	is_valid_email "$inp"
+	act=$?
+	assert_equal "$exp" "$act" "$msg"
+}
+
+is_valid_email_test2() {
+	msg="invalid e-mail string does not validate"
+	inp="joe.at.example.com"
+	exp=1
+	is_valid_email "$inp"
+	act=$?
+	assert_equal "$exp" "$act" "$msg"
+}
+
+get_user_name_test1() {
+	msg="get user name from a valid e-mail string"
+	inp="joe@example.com"
+	exp="joe"
+	act=$(get_user_name "$inp")
+	assert_equal "$exp" "$act" "$msg"
+}
+
+get_user_name_test2() {
+	msg="get user name from an invalid e-mail string"
+	inp="joe_example.com"
+	exp=""
+	act=$(get_user_name "$inp")
+	assert_equal "$exp" "$act" "$msg"
+}
+
+get_domain_name_test1() {
+	msg="get domain name from a valid e-mail string"
+	inp="joe@example.com"
+	exp="example.com"
+	act=$(get_domain_name "$inp")
+	assert_equal "$exp" "$act" "$msg"
+}
+
+get_domain_name_test2() {
+	msg="get domain name from an invalid e-mail string"
+	inp="joeexample.com"
+	exp=""
+	act=$(get_domain_name "$inp")
+	assert_equal "$exp" "$act" "$msg"
+}

@@ -1,0 +1,105 @@
+#!/bin/sh
+#
+# run test cases defined in the input file
+
+OPTIONS=`getopt -o f: -n "$0" -- "$@"`
+
+eval set -- "$OPTIONS"
+
+while true; do
+	case "$1" in
+	-f)
+		file="$2"
+		shift 2
+		;;
+	--)
+		shift
+		break
+		;;
+	*)
+		echo "*** internal error!"
+		exit 1
+		;;
+	esac
+done
+
+
+die() {
+	[ $# -gt 0 ] && echo "error: $@" >&2
+	exit 1
+}
+
+
+messag_fmt="%-50s"
+passed_fmt=" PASSED\n"
+failed_fmt="*FAILED* (expected '%s' but got '%s')\n"
+
+assert_equal() {
+	local exp="$1" && shift
+	local act="$1" && shift
+	local msg="$1" && shift
+	printf "$messag_fmt" "$msg"
+	if [ "$exp" = "$act" ]; then
+		printf "$passed_fmt"
+		return 0
+	else
+		printf "$failed_fmt" "$exp" "$act"
+		return 1
+	fi
+}
+
+assert_not_equal() {
+	local exp="$1" && shift
+	local act="$1" && shift
+	local msg="$1" && shift
+	printf "$messag_fmt" "$msg"
+	if [ "$exp" != "$act" ]; then
+		printf "$passed_fmt"
+		return 0
+	else
+		printf "$failed_fmt" "$exp" "$act"
+		return 1
+	fi
+}
+
+is_path() {
+	local str="$1" && shift
+	if [ $(expr index "$str" "/") -gt 0 ]; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+if [ -r $file ]; then
+	if ! is_path "$file"; then
+		file="./$file"
+	fi
+	. $file
+	ntests=$(echo "$SHUT_TESTS" | wc -w)
+	echo "--- running "$ntests" tests from '$file'"
+	echo
+else
+	echo "*** could not read '$file'"
+	exit 1
+fi
+
+npassed=0; nfailed=0; ntotal=0
+for i in ${SHUT_TESTS}; do
+	if $i; then
+		npassed=$(expr "$npassed" + 1)
+	else
+		nfailed=$(expr "$nfailed" + 1)
+	fi
+	ntotal=$(expr "$ntotal" + 1)
+done
+
+echo
+echo "Summary"
+echo "-------"
+echo "tests total..: $ntotal"
+echo "tests passed.: $npassed"
+echo "tests failed.: $nfailed"
+
+[ $nfailed -eq 0 ]
+return $?
