@@ -1,0 +1,42 @@
+
+shut_target "functions"
+
+SHUT_TESTS="\
+	is_path_test1 \
+	is_path_test2 \
+	ensure_rel_path_test1 \
+	ensure_rel_path_test2 \
+	"
+
+is_path_test1() {
+	msg="path validates as path"
+	inp="usr/share/doc/readme.txt"
+	exp=0
+	is_path "$inp"
+	act=$?
+	assert_equal "$exp" "$act" "$msg"	
+}
+
+is_path_test2() {
+	msg="file does not validate as path"
+	inp="readme.txt"
+	exp=1
+	is_path "$inp"
+	act=$?
+	assert_equal "$exp" "$act" "$msg"	
+}
+
+ensure_rel_path_test1() {
+	msg="convert file name to relative path"
+	inp="readme.txt"
+	exp="./readme.txt"
+	act=$(ensure_rel_path "$inp")
+	assert_equal "$exp" "$act" "$msg"
+}
+
+ensure_rel_path_test2() {
+	msg="don't convert path to relative path"
+	inp="/usr/share/doc/readme.txt"
+	out=$(ensure_rel_path "$inp")
+	assert_equal "$inp" "$out" "$msg"
+}
