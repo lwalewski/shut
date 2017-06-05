@@ -1,0 +1,2 @@
+# shut - shell unit tester
+`shut` is a minimalistic shell unit test runner that aims at being POSIX shell compliant and easy to use. It is distributed under permissive MIT license and comprises a single script file that can be conveniently included in any project. An intuitive example is provided to get you started testing your shell scripts in seconds. The only requirement is that you organize your testable code in functions and store them in a separate file, so that `shut` could `.` it for testing. Start writing your test cases now!
