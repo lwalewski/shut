@@ -37,10 +37,8 @@ failed_fmt="*FAILED* (expected '%s' but got '%s')\n"
 . $(dirname $0)/functions
 
 if [ -r $SHUT_SUITE ]; then
-	if ! is_path "$SHUT_SUITE"; then
-		SHUT_SUITE="./$SHUT_SUITE"
-	fi
-	. $SHUT_SUITE
+	shut_suite_path=$(ensure_rel_path $SHUT_SUITE)
+	. $shut_suite_path
 	ntests=$(echo "$SHUT_TESTS" | wc -w)
 	echo "running "$ntests" test cases from '$SHUT_SUITE'"
 	echo
