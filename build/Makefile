@@ -1,4 +1,4 @@
-# make bundled version that can be used without system-wide installation
+# make standalone version
 
 MAIN_FILE = ../src/shut
 FUNC_FILE = ../src/functions

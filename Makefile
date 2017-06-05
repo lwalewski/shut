@@ -1,9 +1,10 @@
-BUNDLED = build/shut
+STANDALONE = build/shut
 
-all: $(BUNDLED)
-	@echo "Successfully built $(BUNDLED)"
+all: $(STANDALONE)
+	@echo "Successfully tested and built standalone version in: $(STANDALONE)"
+	@echo "You can copy it to your project now!"
 
-$(BUNDLED): test
+$(STANDALONE): test
 	make -C build
 
 test:
