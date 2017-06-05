@@ -30,10 +30,6 @@ die() {
 }
 
 
-messag_fmt="%-50s"
-passed_fmt=" PASSED\n"
-failed_fmt="*FAILED* (expected '%s' but got '%s')\n"
-
 . $(dirname $0)/functions || die "could not source own implementation!"
 
 if [ -r $SHUT_SUITE ]; then
