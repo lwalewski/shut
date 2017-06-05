@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# run test cases defined in the input file
+# run test cases
 
 OPTIONS=`getopt -o f: -n "$0" -- "$@"`
 
@@ -32,25 +32,31 @@ die() {
 
 . $(dirname $0)/functions || die "could not source own implementation!"
 
-if [ -r $SHUT_SUITE ]; then
-	shut_suite_path=$(ensure_rel_path $SHUT_SUITE)
-	. $shut_suite_path || die "could not source test suite '$shut_suite_path'"
-	ntests=$(echo "$SHUT_TESTS" | wc -w)
-	echo "running "$ntests" test cases from '$shut_suite_path'"
-
-	if [ "$SHUT_TARGET" = "_self" ]; then
-		echo "testing own implementation"
-	else
-		shut_suite_dir=$(dirname $shut_suite_path)
-		shut_target_path="${shut_suite_dir}/${SHUT_TARGET}"
-		. $shut_target_path
-		echo "testing implementation in '$shut_target_path'"
-	fi
-	echo
-else
+if [ ! -r "$SHUT_SUITE" ]; then
 	echo "*** could not read test suite '$SHUT_SUITE'"
 	exit 1
 fi
+
+shut_suite_path=$(ensure_rel_path "$SHUT_SUITE")
+. $shut_suite_path || die "could not source test suite '$shut_suite_path'"
+
+ntests=$(echo "$SHUT_TESTS" | wc -w)
+if [ $ntests -eq 0 ]; then
+	echo "*** no tests registered in '$SHUT_SUITE'"
+	exit 1
+else
+	echo "running "$ntests" test cases from '$SHUT_SUITE'"
+fi
+
+if [ "$SHUT_TARGET" = "_self" ]; then
+	echo "testing own implementation"
+else
+	shut_suite_dir=$(dirname $shut_suite_path)
+	shut_target_path="${shut_suite_dir}/${SHUT_TARGET}"
+	. $shut_target_path
+	echo "testing implementation in '$shut_target_path'"
+fi
+echo
 
 npassed=0; nfailed=0; ntotal=0
 for i in ${SHUT_TESTS}; do
