@@ -34,49 +34,7 @@ messag_fmt="%-50s"
 passed_fmt=" PASSED\n"
 failed_fmt="*FAILED* (expected '%s' but got '%s')\n"
 
-assert_equal() {
-	local exp="$1" && shift
-	local act="$1" && shift
-	local msg="$1" && shift
-	printf "$messag_fmt" "$msg"
-	if [ "$exp" = "$act" ]; then
-		printf "$passed_fmt"
-		return 0
-	else
-		printf "$failed_fmt" "$exp" "$act"
-		return 1
-	fi
-}
-
-assert_not_equal() {
-	local exp="$1" && shift
-	local act="$1" && shift
-	local msg="$1" && shift
-	printf "$messag_fmt" "$msg"
-	if [ "$exp" != "$act" ]; then
-		printf "$passed_fmt"
-		return 0
-	else
-		printf "$failed_fmt" "$exp" "$act"
-		return 1
-	fi
-}
-
-is_path() {
-	local str="$1" && shift
-	if [ $(expr index "$str" "/") -gt 0 ]; then
-		return 0
-	else
-		return 1
-	fi
-}
-
-shut_target() {
-	local src_file="$1" && shift
-	local src_path="$(dirname $SHUT_SUITE)/$src_file"
-	echo "testing implementation in '$src_path'"
-	. $src_path
-}
+. $(dirname $0)/functions
 
 if [ -r $SHUT_SUITE ]; then
 	if ! is_path "$SHUT_SUITE"; then
