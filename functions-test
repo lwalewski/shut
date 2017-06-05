@@ -1,5 +1,5 @@
 
-shut_target "functions"
+SHUT_TARGET="_self"
 
 SHUT_TESTS="\
 	is_path_test1 \

@@ -43,10 +43,3 @@ ensure_rel_path() {
 	fi
 	echo "$str"
 }
-
-shut_target() {
-	local src_file="$1" && shift
-	local src_path="$(dirname $SHUT_SUITE)/$src_file"
-	echo "testing implementation in '$src_path'"
-	. $src_path
-}

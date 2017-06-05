@@ -2,7 +2,7 @@
 #
 # define test cases
 
-shut_target "email-functions"
+SHUT_TARGET="email-functions"
 
 SHUT_TESTS="\
 	email_bre_test1 \
