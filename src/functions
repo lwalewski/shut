@@ -1,6 +1,7 @@
 shut_messag_fmt="%-50s"
 shut_passed_fmt=" PASSED\n"
-shut_failed_fmt="*FAILED* (expected '%s' but got '%s')\n"
+shut_failed_equal_fmt="*FAILED* (expected '%s' but got '%s')\n"
+shut_failed_not_equal_fmt="*FAILED* (expected NOT '%s' but got '%s')\n"
 
 assert_equal() {
 	local exp="$1" && shift
@@ -11,7 +12,7 @@ assert_equal() {
 		printf "$shut_passed_fmt"
 		return 0
 	else
-		printf "$shut_failed_fmt" "$exp" "$act"
+		printf "$shut_failed_equal_fmt" "$exp" "$act"
 		return 1
 	fi
 }
@@ -25,7 +26,7 @@ assert_not_equal() {
 		printf "$shut_passed_fmt"
 		return 0
 	else
-		printf "$shut_failed_fmt" "$exp" "$act"
+		printf "$shut_failed_not_equal_fmt" "$exp" "$act"
 		return 1
 	fi
 }
