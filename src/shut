@@ -2,14 +2,18 @@
 #
 # run test cases
 
-OPTIONS=`getopt -o f: -n "$0" -- "$@"`
+OPTIONS=`getopt -o t:s: -n "$0" -- "$@"`
 
 eval set -- "$OPTIONS"
 
 while true; do
 	case "$1" in
-	-f)
-		SHUT_SUITE="$2"
+	-s)
+		shut_suite_opt="$2"
+		shift 2
+		;;
+	-t)
+		shut_target_opt="$2"
 		shift 2
 		;;
 	--)
@@ -32,32 +36,51 @@ die() {
 
 . $(dirname $0)/functions || die "could not source own implementation!"
 
-if [ ! -r "$SHUT_SUITE" ]; then
-	echo "*** could not read test suite '$SHUT_SUITE'"
+if [ "$shut_suite_opt" ]; then
+	shut_suite=$shut_suite_opt
+else
+	echo "*** please provide test suite (-s <file>)"
 	exit 1
 fi
 
-shut_suite_path=$(ensure_rel_path "$SHUT_SUITE")
-. $shut_suite_path || die "could not source test suite '$shut_suite_path'"
+shut_suite_path=$(ensure_rel_path "$shut_suite")
+echo "running test cases from '$shut_suite'"
+. $shut_suite_path || die "*** could not source test suite '$shut_suite_path'"
+
+if [ "$shut_target_opt" ]; then
+	shut_target=$shut_target_opt
+fi
+if [ "$shut_target" ]; then
+	if [ "$shut_target" != "_self" ]; then
+		shut_target_path=$(ensure_rel_path "$shut_target")
+	fi
+fi
+
+# if target not given on cmdline take it over from test suite
+if [ -z "$shut_target_path" ] && [ "$SHUT_TARGET" ]; then
+	shut_target=$SHUT_TARGET
+	if [ "$shut_target" != "_self" ]; then
+		shut_suite_dir=$(dirname $shut_suite_path)
+		shut_target_path="${shut_suite_dir}/${shut_target}"
+	fi
+fi
+
+if [ -z "$shut_target_path" ] && [ "$shut_target" != "_self" ]; then
+	echo "*** please provide target impl (-t <file> | SHUT_TARGET=<file>)"
+	exit 1
+fi
+echo "testing target impl in '$shut_target'"
+. $shut_target_path || die "*** could not source target impl '$shut_target_path'"
 
 ntests=$(echo "$SHUT_TESTS" | wc -w)
 if [ $ntests -eq 0 ]; then
-	echo "*** no tests registered in '$SHUT_SUITE'"
+	echo "*** no tests registered in '$shut_suite'"
 	exit 1
 else
-	echo "running "$ntests" test cases from '$SHUT_SUITE'"
+	echo "number of tests scheduled $ntests"
 fi
 
-if [ "$SHUT_TARGET" = "_self" ]; then
-	echo "testing own implementation"
-else
-	shut_suite_dir=$(dirname $shut_suite_path)
-	shut_target_path="${shut_suite_dir}/${SHUT_TARGET}"
-	. $shut_target_path
-	echo "testing implementation in '$shut_target_path'"
-fi
 echo
-
 npassed=0; nfailed=0; ntotal=0
 for i in ${SHUT_TESTS}; do
 	if $i; then
