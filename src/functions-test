@@ -6,6 +6,8 @@ SHUT_TESTS="\
 	is_path_test2 \
 	ensure_rel_path_test1 \
 	ensure_rel_path_test2 \
+	test_assert_returns_true1 \
+	test_assert_returns_true2 \
 	"
 
 is_path_test1() {
@@ -39,4 +41,36 @@ ensure_rel_path_test2() {
 	inp="/usr/share/doc/readme.txt"
 	out=$(ensure_rel_path "$inp")
 	assert_equal "$inp" "$out" "$msg"
+}
+
+assert_equal_mockup() {
+	local exp="$1" && shift
+	local act="$1" && shift
+	local msg="$1" && shift
+	printf "$shut_messag_fmt" "$msg"
+	if [ "$exp" = "$act" ]; then
+		printf "$shut_passed_fmt"
+		return 0
+	else
+		printf "$shut_failed_equal_fmt" "$exp" "$act"
+		return 1
+	fi
+}
+
+test_assert_returns_true1() {
+	msg="assert_returns_true returns true on success"
+	cmd="true" # returns 0 == success
+	exp=0
+	assert_returns_true "$cmd" "$msg" > /dev/null 2>&1
+	act=$?
+	assert_equal_mockup "$exp" "$act" "$msg"
+}
+
+test_assert_returns_true2() {
+	msg="assert_returns_true returns false on failure"
+	cmd="! true" # returns 1 == failure
+	exp=1
+	assert_returns_true "$cmd" "$msg" > /dev/null 2>&1
+	act=$?
+	assert_equal_mockup "$exp" "$act" "$msg"
 }
