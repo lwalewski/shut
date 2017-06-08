@@ -45,6 +45,20 @@ assert_returns_true() {
 	fi
 }
 
+assert_returns_false() {
+	local cmd="$1" && shift
+	local msg="$1" && shift
+	printf "$shut_messag_fmt" "$msg"
+	eval "$cmd"
+	if [ $? -eq 1 ]; then
+		printf "$shut_passed_fmt"
+		return 0
+	else
+		printf "*FAILED* (expected <false> but got <true>)\n"
+		return 1
+	fi
+}
+
 is_path() {
 	local str="$1" && shift
 	if [ $(expr index "$str" "/") -gt 0 ]; then

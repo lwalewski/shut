@@ -8,6 +8,8 @@ SHUT_TESTS="\
 	ensure_rel_path_test2 \
 	test_assert_returns_true1 \
 	test_assert_returns_true2 \
+	test_assert_returns_false1 \
+	test_assert_returns_false2 \
 	"
 
 is_path_test1() {
@@ -71,6 +73,24 @@ test_assert_returns_true2() {
 	cmd="! true" # returns 1 == failure
 	exp=1
 	assert_returns_true "$cmd" "$msg" > /dev/null 2>&1
+	act=$?
+	assert_equal_mockup "$exp" "$act" "$msg"
+}
+
+test_assert_returns_false1() {
+	msg="assert_returns_false returns true on failure"
+	cmd="! true" # returns 1 == failure
+	exp=0
+	assert_returns_false "$cmd" "$msg" > /dev/null 2>&1
+	act=$?
+	assert_equal_mockup "$exp" "$act" "$msg"
+}
+
+test_assert_returns_false2() {
+	msg="assert_returns_false returns false on success"
+	cmd="true" # returns 0 == success
+	exp=1
+	assert_returns_false "$cmd" "$msg" > /dev/null 2>&1
 	act=$?
 	assert_equal_mockup "$exp" "$act" "$msg"
 }
