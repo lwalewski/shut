@@ -94,9 +94,10 @@ done
 echo
 echo "Summary"
 echo "-------"
-echo "tests total..: $ntotal"
-echo "tests passed.: $npassed"
-echo "tests failed.: $nfailed"
+echo "tests total...: $ntests"
+echo "tests passed..: $npassed"
+echo "tests failed..: $nfailed"
+echo "tests crashed.: $(expr $ntests - $ntotal)"
 
 [ $nfailed -eq 0 ]
 return $?
