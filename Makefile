@@ -1,3 +1,7 @@
+# SHell Unit Test (SHUT) runner (https://github.com/lwalewski/shut.git)
+# Copyright (c) 2017 Lukasz Walewski. All rights reserved.
+# Distributed under the MIT License (http://opensource.org/licenses/MIT)
+
 STANDALONE = build/shut
 
 all: $(STANDALONE)

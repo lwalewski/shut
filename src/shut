@@ -1,6 +1,8 @@
 #!/bin/sh
 #
-# run test cases
+# SHell Unit Test (SHUT) runner (https://github.com/lwalewski/shut.git)
+# Copyright (c) 2017 Lukasz Walewski. All rights reserved.
+# Distributed under the MIT License (http://opensource.org/licenses/MIT)
 
 OPTIONS=`getopt -o t:s: -n "$0" -- "$@"`
 

@@ -1,4 +1,6 @@
-# make standalone version
+# SHell Unit Test (SHUT) runner (https://github.com/lwalewski/shut.git)
+# Copyright (c) 2017 Lukasz Walewski. All rights reserved.
+# Distributed under the MIT License (http://opensource.org/licenses/MIT)
 
 MAIN_FILE = ../src/shut
 FUNC_FILE = ../src/functions
@@ -15,7 +17,7 @@ $(DST_FILE).tmp: $(MAIN_FILE)
 	cp $< $@
 
 add_license: $(DST_FILE).tmp license
-	sed -i "3r $(word 2,$^)" $<
+	sed -i "5r $(word 2,$^)" $<
 
 add_functions: $(DST_FILE).tmp
 	sed -i -e "/$(FUNC_REGEXP)/r $(FUNC_FILE)" -e "/$(FUNC_REGEXP)/d" $<

@@ -1,6 +1,6 @@
-#!/bin/sh
-#
-# implementation to be tested
+# SHell Unit Test (SHUT) runner (https://github.com/lwalewski/shut.git)
+# Copyright (c) 2017 Lukasz Walewski. All rights reserved.
+# Distributed under the MIT License (http://opensource.org/licenses/MIT)
 
 email_bre='^[A-Za-z]\{1,\}[A-Za-z0-9.]\{1,\}@[A-Za-z0-9]\{1,\}\(\.[A-Za-z0-9]\{1,\}\)\{1,\}$'
 
