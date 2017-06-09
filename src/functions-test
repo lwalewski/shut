@@ -1,4 +1,3 @@
-
 SHUT_TARGET="_self"
 
 SHUT_TESTS="\
@@ -6,11 +5,15 @@ SHUT_TESTS="\
 	is_path_test2 \
 	ensure_rel_path_test1 \
 	ensure_rel_path_test2 \
+	test_assert_equal1 \
+	test_assert_equal2 \
+	test_assert_not_equal1 \
+	test_assert_not_equal2 \
 	test_assert_returns_true1 \
 	test_assert_returns_true2 \
 	test_assert_returns_false1 \
 	test_assert_returns_false2 \
-	"
+"
 
 is_path_test1() {
 	msg="path validates as path"
@@ -59,8 +62,46 @@ assert_equal_mockup() {
 	fi
 }
 
+test_assert_equal1() {
+	msg="assert_equal returns <true> on equality"
+	exp=0
+	inp="foo"
+	assert_equal "$inp" "$inp" "trash" > /dev/null 2>&1
+	act=$?
+	assert_equal_mockup "$exp" "$act" "$msg"
+}
+
+test_assert_equal2() {
+	msg="assert_equal returns <false> on inequality"
+	exp=1
+	inp1="foo"
+	inp2="bar"
+	assert_equal "$inp1" "$inp2" "trash" > /dev/null 2>&1
+	act=$?
+	assert_equal_mockup "$exp" "$act" "$msg"
+}
+
+test_assert_not_equal1() {
+	msg="assert_not_equal returns <false> on equality"
+	exp=1
+	inp="foo"
+	assert_not_equal "$inp" "$inp" "trash" > /dev/null 2>&1
+	act=$?
+	assert_equal_mockup "$exp" "$act" "$msg"
+}
+
+test_assert_not_equal2() {
+	msg="assert_not_equal returns <true> on inequality"
+	exp=0
+	inp1="foo"
+	inp2="bar"
+	assert_not_equal "$inp1" "$inp2" "trash" > /dev/null 2>&1
+	act=$?
+	assert_equal_mockup "$exp" "$act" "$msg"
+}
+
 test_assert_returns_true1() {
-	msg="assert_returns_true returns true on success"
+	msg="assert_returns_true returns <true> on success"
 	cmd="true" # returns 0 == success
 	exp=0
 	assert_returns_true "$cmd" "$msg" > /dev/null 2>&1
@@ -69,7 +110,7 @@ test_assert_returns_true1() {
 }
 
 test_assert_returns_true2() {
-	msg="assert_returns_true returns false on failure"
+	msg="assert_returns_true returns <false> on failure"
 	cmd="! true" # returns 1 == failure
 	exp=1
 	assert_returns_true "$cmd" "$msg" > /dev/null 2>&1
@@ -78,7 +119,7 @@ test_assert_returns_true2() {
 }
 
 test_assert_returns_false1() {
-	msg="assert_returns_false returns true on failure"
+	msg="assert_returns_false returns <true> on failure"
 	cmd="! true" # returns 1 == failure
 	exp=0
 	assert_returns_false "$cmd" "$msg" > /dev/null 2>&1
@@ -87,7 +128,7 @@ test_assert_returns_false1() {
 }
 
 test_assert_returns_false2() {
-	msg="assert_returns_false returns false on success"
+	msg="assert_returns_false returns <false> on success"
 	cmd="true" # returns 0 == success
 	exp=1
 	assert_returns_false "$cmd" "$msg" > /dev/null 2>&1
