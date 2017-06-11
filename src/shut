@@ -6,7 +6,7 @@
 
 VERSION='0.0.1'
 
-OPTIONS=`getopt -o t:s: -n "$0" -- "$@"`
+OPTIONS=`getopt -o t:s:v -n "$0" -- "$@"`
 
 eval set -- "$OPTIONS"
 
@@ -19,6 +19,10 @@ while true; do
 	-t)
 		shut_target_opt="$2"
 		shift 2
+		;;
+	-v)
+		echo "$VERSION"
+		exit 0
 		;;
 	--)
 		shift
