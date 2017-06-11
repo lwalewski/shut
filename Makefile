@@ -16,3 +16,23 @@ test:
 
 clean:
 	make -C build $@
+
+version_file = src/shut
+
+release: tag
+
+tag: commit
+	git tag -a "v$(new_vstr)"
+
+commit: version
+	git commit -m "release version $(new_vstr)" $(version_file)
+
+version: new_version
+	sed -i '/^VERSION=/s/.*/VERSION=\x27$(new_vstr)\x27/' $(version_file)
+
+new_version: old_version
+	$(eval new_vstr := $(shell ./scripts/get-new-version.sh -c "$(old_vstr)"))
+
+old_version:
+	$(eval old_vstr := $(shell ./scripts/get-old-version.sh))
+
