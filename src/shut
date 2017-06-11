@@ -6,12 +6,25 @@
 
 VERSION='0.0.1'
 
-OPTIONS=`getopt -o t:s:v -n "$0" -- "$@"`
+version() {
+	echo "SHell Unit Test runner v$VERSION"
+}
+
+usage() {
+	version
+	echo "Usage: $0 -s <suite> -t <target> -v"
+}
+
+OPTIONS=`getopt -o hs:t:v -n "$0" -- "$@"`
 
 eval set -- "$OPTIONS"
 
 while true; do
 	case "$1" in
+	-h)
+		usage
+		exit 0
+		;;
 	-s)
 		shut_suite_opt="$2"
 		shift 2
@@ -21,7 +34,7 @@ while true; do
 		shift 2
 		;;
 	-v)
-		echo "$VERSION"
+		version
 		exit 0
 		;;
 	--)
